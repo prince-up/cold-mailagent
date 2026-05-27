@@ -110,12 +110,13 @@ Thank You.`);
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
             <div>
-              <h2 className="text-5xl font-extrabold leading-tight">Automate outreach. Close more roles.</h2>
-              <p className="mt-6 text-lg text-[var(--muted)] max-w-xl">Upload HR lists or resumes, extract emails with AI, connect Gmail, and send personalized cold emails at scale.</p>
+              <span className="top-badge animate-fade-up">AI · Beta</span>
+              <h2 className="text-5xl font-extrabold leading-tight mt-4 hero-heading animate-fade-up" style={{animationDelay: '80ms'}}>Automate outreach. Close more roles.</h2>
+              <p className="mt-6 text-lg text-[var(--muted)] max-w-xl animate-fade-up" style={{animationDelay: '160ms'}}>Upload HR lists or resumes, extract emails with AI, connect Gmail, and send personalized cold emails at scale.</p>
 
-              <div className="mt-8 flex items-center gap-4">
-                <a href="#upload" className="inline-flex items-center gap-3 bg-[var(--accent)] hover:bg-[var(--accent-600)] text-white px-6 py-3 rounded-full font-semibold">Get Started</a>
-                <a href="#features" className="text-[var(--muted)]">See Features</a>
+              <div className="mt-8 flex items-center gap-4 animate-fade-up" style={{animationDelay: '220ms'}}>
+                <a href="#upload" className="btn-primary">Get Started</a>
+                <a href="#features" className="btn-ghost muted inline-flex items-center justify-center" style={{padding: '10px 14px'}}>See Features</a>
               </div>
 
               <div className="mt-8 flex gap-6">
@@ -130,10 +131,16 @@ Thank You.`);
               </div>
             </div>
 
-            <div id="upload" className="glass-card card-elevated rounded-3xl p-8">
+            <div id="upload" className="glass-card card-elevated rounded-3xl p-8 animate-fade-up" style={{animationDelay: '260ms'}}>
               <h3 className="text-2xl font-semibold mb-4">Upload HR Contacts</h3>
-              <input type="file" onChange={(e) => { if (e.target.files) setFile(e.target.files[0]); }} className="w-full border rounded-lg p-3 mb-4" />
-              <button onClick={uploadFile} className="bg-[var(--accent)] hover:bg-[var(--accent-600)] text-white px-6 py-3 rounded-lg font-semibold">{loading ? 'Uploading...' : 'Upload & Extract'}</button>
+              <div className="mb-3">
+                <label className="text-sm muted mb-2 block">Select a CSV or PDF</label>
+                <input type="file" onChange={(e) => { if (e.target.files) setFile(e.target.files[0]); }} className="w-full border rounded-lg p-3" />
+              </div>
+              <div className="flex gap-3 items-center">
+                <button onClick={uploadFile} className="btn-primary">{loading ? 'Uploading...' : 'Upload & Extract'}</button>
+                <div className="text-sm muted">Supports CSV, PDF, TXT</div>
+              </div>
 
               <hr className="my-6" />
 
@@ -145,8 +152,8 @@ Thank You.`);
               <textarea rows={6} value={customMessage} onChange={(e) => setCustomMessage(e.target.value)} className="w-full border rounded-lg p-3 mb-4" />
 
               <div className="flex gap-3">
-                <button onClick={sendBulkMails} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg">{sending ? 'Sending...' : 'Send Emails'}</button>
-                <button onClick={() => { if (session) { alert('Connected: ' + session.user?.email) } else signIn('google') }} className="border px-4 py-2 rounded-lg">{session ? 'Account' : 'Connect Gmail'}</button>
+                <button onClick={sendBulkMails} className="btn-primary">{sending ? 'Sending...' : 'Send Emails'}</button>
+                <button onClick={() => { if (session) { alert('Connected: ' + session.user?.email) } else signIn('google') }} className="btn-ghost">{session ? 'Account' : 'Connect Gmail'}</button>
               </div>
 
             </div>
@@ -165,7 +172,7 @@ Thank You.`);
           <h3 className="text-3xl font-bold mb-6">Features</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 glass-card rounded-xl flex gap-4 items-start">
-              <img src="/icon-1.svg" alt="icon" className="h-12 w-12" />
+              <img src="/icon-1.svg" alt="icon" className="h-12 w-12 animate-floaty" />
               <div>
                 <h4 className="font-semibold mb-2">AI Email Extraction</h4>
                 <p className="text-sm text-[var(--muted)]">Extract contact emails from PDFs, CSVs and resumes automatically.</p>
