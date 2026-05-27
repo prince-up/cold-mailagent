@@ -40,7 +40,21 @@ Thank You.`);
       const res = await axios.post("http://127.0.0.1:8000/upload-csv", formData);
 
       setResponseType(res.data.type || "");
+      // Update emails when PDF extraction returns results
       if (res.data.emails_found) setEmails(res.data.emails_found);
+
+      // append to upload logs for UI visibility
+      const logEntry: any = {
+        time: new Date().toISOString(),
+        filename: file.name,
+        type: res.data.type || "unknown",
+        total_records: res.data.total_records || null,
+        total_emails: res.data.total_emails || (res.data.emails_found ? res.data.emails_found.length : null),
+        emails: res.data.emails_found || null,
+      };
+
+      setUploadsLog((s) => [logEntry, ...s]);
+
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -63,15 +77,43 @@ Thank You.`);
         message: customMessage,
       });
 
-      console.log(res.data);
       setSending(false);
-      alert("Bulk Emails Sent Successfully");
+
+      // Use backend response to show accurate result
+      const result = res.data || {};
+      setSendResult(result);
+
+      if (result.success_count && result.success_count > 0) {
+        // inform user what actually succeeded/failed
+        alert(`Sent: ${result.success_count} • Failed: ${result.failed_count}`);
+      } else if (result.failed_count && result.failed_count > 0) {
+        alert(`Failed to send emails. ${result.failed_count} failures.`);
+      } else {
+        alert('No emails were sent. Check server logs.');
+      }
+
+      // store send attempt in logs
+      const sendLog = {
+        time: new Date().toISOString(),
+        attempted: selectedEmails.length,
+        success_count: result.success_count || 0,
+        failed_count: result.failed_count || 0,
+        failed_emails: result.failed_emails || [],
+        success_emails: result.success_emails || [],
+      };
+
+      setSendLogs((s) => [sendLog, ...s]);
     } catch (error) {
       console.error(error);
       setSending(false);
       alert("Failed To Send Emails");
     }
   };
+
+  // UI state for logs and send results
+  const [uploadsLog, setUploadsLog] = useState<any[]>([]);
+  const [sendLogs, setSendLogs] = useState<any[]>([]);
+  const [sendResult, setSendResult] = useState<any | null>(null);
 
   return (
     <main className="min-h-screen">
@@ -137,6 +179,11 @@ Thank You.`);
                 <label className="text-sm muted mb-2 block">Select a CSV or PDF</label>
                 <input type="file" onChange={(e) => { if (e.target.files) setFile(e.target.files[0]); }} className="w-full border rounded-lg p-3" />
               </div>
+              <div className="mb-3 mt-4">
+                <label className="text-sm muted mb-2 block">Attach Resume (optional)</label>
+                <input type="file" onChange={(e) => { if (e.target.files) setResume(e.target.files[0]); }} className="w-full border rounded-lg p-3" />
+                {resume && (<p className="text-sm mt-2 muted">Selected: {resume.name}</p>)}
+              </div>
               <div className="flex gap-3 items-center">
                 <button onClick={uploadFile} className="btn-primary">{loading ? 'Uploading...' : 'Upload & Extract'}</button>
                 <div className="text-sm muted">Supports CSV, PDF, TXT</div>
@@ -165,6 +212,77 @@ Thank You.`);
           </div>
         </div>
       </section>
+
+    {/* Upload & Send Logs */}
+    <section className="py-12">
+      <div className="max-w-7xl mx-auto px-6">
+        <h3 className="text-2xl font-semibold mb-4">Activity</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="glass-card rounded-2xl p-6">
+            <h4 className="font-semibold mb-3">Uploads</h4>
+            {uploadsLog.length === 0 ? (
+              <p className="muted">No uploads yet. Upload a CSV or PDF to see extraction logs.</p>
+            ) : (
+              <div className="space-y-3">
+                {uploadsLog.map((l, i) => (
+                  <div key={i} className="p-3 border rounded-lg">
+                    <div className="flex justify-between">
+                      <div className="font-medium">{l.filename}</div>
+                      <div className="text-sm muted">{new Date(l.time).toLocaleString()}</div>
+                    </div>
+                    <div className="text-sm muted">Type: {l.type} • Total: {l.total_records ?? l.total_emails ?? '—'}</div>
+                    {l.emails && l.emails.length > 0 && (
+                      <details className="mt-2 text-sm"><summary className="cursor-pointer">Show emails ({l.emails.length})</summary>
+                        <div className="mt-2 text-xs break-words max-h-40 overflow-y-auto">{l.emails.join(', ')}</div>
+                      </details>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="glass-card rounded-2xl p-6">
+            <h4 className="font-semibold mb-3">Send Attempts</h4>
+            {sendLogs.length === 0 ? (
+              <p className="muted">No send attempts yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {sendLogs.map((slog, idx) => (
+                  <div key={idx} className="p-3 border rounded-lg">
+                    <div className="flex justify-between">
+                      <div className="font-medium">Attempted: {slog.attempted}</div>
+                      <div className="text-sm muted">{new Date(slog.time).toLocaleString()}</div>
+                    </div>
+                    <div className="text-sm muted">Success: {slog.success_count} • Failed: {slog.failed_count}</div>
+                    {slog.failed_emails && slog.failed_emails.length > 0 && (
+                      <details className="mt-2 text-sm"><summary className="cursor-pointer">Show failed emails</summary>
+                        <div className="mt-2 text-xs break-words max-h-40 overflow-y-auto">{slog.failed_emails.map((f:any)=>f.email||f).join(', ')}</div>
+                      </details>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Dashboard images gallery */}
+    <section className="py-6">
+      <div className="max-w-7xl mx-auto px-6">
+        <h3 className="text-2xl font-semibold mb-4">Preview</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="rounded-2xl overflow-hidden card-elevated">
+            <img src="/dashboard-1.svg" alt="dashboard" className="w-full h-auto" />
+          </div>
+          <div className="rounded-2xl overflow-hidden card-elevated">
+            <img src="/dashboard-2.svg" alt="dashboard" className="w-full h-auto" />
+          </div>
+        </div>
+      </div>
+    </section>
 
       {/* Features */}
       <section id="features" className="py-16 bg-white/0">
