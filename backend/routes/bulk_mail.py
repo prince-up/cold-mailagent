@@ -25,7 +25,7 @@ def send_bulk_mails(data: BulkMailRequest):
 
         try:
 
-            send_email(email)
+            send_email(email, data.message)
 
             success.append(email)
 
