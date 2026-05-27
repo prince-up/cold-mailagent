@@ -256,12 +256,46 @@ Thank You.`);
                     </div>
                     <div className="text-sm muted">Success: {slog.success_count} • Failed: {slog.failed_count}</div>
                     {slog.failed_emails && slog.failed_emails.length > 0 && (
-                      <details className="mt-2 text-sm"><summary className="cursor-pointer">Show failed emails</summary>
-                        <div className="mt-2 text-xs break-words max-h-40 overflow-y-auto">{slog.failed_emails.map((f:any)=>f.email||f).join(', ')}</div>
+                      <details className="mt-2 text-sm">
+                        <summary className="cursor-pointer">Show failed emails and errors</summary>
+                        <div className="mt-2 space-y-2 max-h-52 overflow-y-auto">
+                          {slog.failed_emails.map((f: any, errorIndex: number) => (
+                            <div key={errorIndex} className="text-xs border rounded-lg p-2">
+                              <div className="font-medium break-all">{f.email || f}</div>
+                              {f.error && <div className="mt-1 text-red-400 break-words">{f.error}</div>}
+                            </div>
+                          ))}
+                        </div>
                       </details>
                     )}
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+
+          <div className="glass-card rounded-2xl p-6 mt-6 lg:mt-0">
+            <h4 className="font-semibold mb-3">Last Backend Response</h4>
+            {!sendResult ? (
+              <p className="muted">No send response yet.</p>
+            ) : (
+              <div className="text-sm space-y-2">
+                <div>Total: {sendResult.total ?? '—'}</div>
+                <div>Success: {sendResult.success_count ?? 0}</div>
+                <div>Failed: {sendResult.failed_count ?? 0}</div>
+                {sendResult.failed_emails?.length > 0 && (
+                  <details>
+                    <summary className="cursor-pointer">Inspect backend errors</summary>
+                    <div className="mt-2 space-y-2 max-h-52 overflow-y-auto">
+                      {sendResult.failed_emails.map((f: any, errorIndex: number) => (
+                        <div key={errorIndex} className="text-xs border rounded-lg p-2">
+                          <div className="font-medium break-all">{f.email}</div>
+                          <div className="mt-1 text-red-400 break-words">{f.error}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
               </div>
             )}
           </div>

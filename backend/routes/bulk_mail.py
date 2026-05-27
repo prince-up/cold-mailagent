@@ -41,5 +41,6 @@ def send_bulk_mails(data: BulkMailRequest):
         "success_count": len(success),
         "failed_count": len(failed),
         "success_emails": success,
-        "failed_emails": failed
+        "failed_emails": failed,
+        "message": "Bulk mail attempt finished",
     }
