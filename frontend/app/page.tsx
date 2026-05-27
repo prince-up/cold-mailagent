@@ -130,7 +130,7 @@ Thank You.`);
               </div>
             </div>
 
-            <div id="upload" className="glass-card rounded-3xl p-8">
+            <div id="upload" className="glass-card card-elevated rounded-3xl p-8">
               <h3 className="text-2xl font-semibold mb-4">Upload HR Contacts</h3>
               <input type="file" onChange={(e) => { if (e.target.files) setFile(e.target.files[0]); }} className="w-full border rounded-lg p-3 mb-4" />
               <button onClick={uploadFile} className="bg-[var(--accent)] hover:bg-[var(--accent-600)] text-white px-6 py-3 rounded-lg font-semibold">{loading ? 'Uploading...' : 'Upload & Extract'}</button>
@@ -151,6 +151,10 @@ Thank You.`);
 
             </div>
 
+            <div className="hidden lg:flex justify-center items-center">
+              <img src="/hero-illustration.svg" alt="hero" className="max-w-[420px] shadow-2xl rounded-2xl" />
+            </div>
+
           </div>
         </div>
       </section>
@@ -160,17 +164,26 @@ Thank You.`);
         <div className="max-w-7xl mx-auto px-6">
           <h3 className="text-3xl font-bold mb-6">Features</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 glass-card rounded-xl">
-              <h4 className="font-semibold mb-2">AI Email Extraction</h4>
-              <p className="text-sm text-[var(--muted)]">Extract contact emails from PDFs, CSVs and resumes automatically.</p>
+            <div className="p-6 glass-card rounded-xl flex gap-4 items-start">
+              <img src="/icon-1.svg" alt="icon" className="h-12 w-12" />
+              <div>
+                <h4 className="font-semibold mb-2">AI Email Extraction</h4>
+                <p className="text-sm text-[var(--muted)]">Extract contact emails from PDFs, CSVs and resumes automatically.</p>
+              </div>
             </div>
-            <div className="p-6 glass-card rounded-xl">
-              <h4 className="font-semibold mb-2">Gmail Integration</h4>
-              <p className="text-sm text-[var(--muted)]">Connect securely and send personalized emails from your account.</p>
+            <div className="p-6 glass-card rounded-xl flex gap-4 items-start">
+              <img src="/icon-2.svg" alt="icon" className="h-12 w-12" />
+              <div>
+                <h4 className="font-semibold mb-2">Gmail Integration</h4>
+                <p className="text-sm text-[var(--muted)]">Connect securely and send personalized emails from your account.</p>
+              </div>
             </div>
-            <div className="p-6 glass-card rounded-xl">
-              <h4 className="font-semibold mb-2">Scale & Personalize</h4>
-              <p className="text-sm text-[var(--muted)]">Send high-volume outreach while keeping messages personalized.</p>
+            <div className="p-6 glass-card rounded-xl flex gap-4 items-start">
+              <img src="/icon-3.svg" alt="icon" className="h-12 w-12" />
+              <div>
+                <h4 className="font-semibold mb-2">Scale & Personalize</h4>
+                <p className="text-sm text-[var(--muted)]">Send high-volume outreach while keeping messages personalized.</p>
+              </div>
             </div>
           </div>
         </div>
