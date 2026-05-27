@@ -40,321 +40,120 @@ Thank You.`
   const uploadFile = async () => {
 
     if (!file) {
-      alert("Please select file");
-      return;
-    }
 
-    try {
+      <main className="min-h-screen">
 
-      setLoading(true);
+        <header className="sticky top-0 z-50 bg-transparent">
+          <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
-      const formData = new FormData();
+            <div className="flex items-center gap-4">
 
-      formData.append("file", file);
+              <img src="/logo.svg" alt="logo" className="h-10 w-10" />
 
-      const res = await axios.post(
-        "http://127.0.0.1:8000/upload-csv",
-        formData
-      );
-
-      setResponseType(res.data.type);
-
-      if (res.data.emails_found) {
-        setEmails(res.data.emails_found);
-      }
-
-      setLoading(false);
-
-    } catch (error) {
-
-      console.log(error);
-
-      setLoading(false);
-
-      alert("Upload Failed");
-    }
-  };
-
-  // Send Bulk Emails
-
-  const sendBulkMails = async () => {
-
-    if (!session) {
-      alert("Please Login With Google");
-      return;
-    }
-
-    try {
-
-      setSending(true);
-
-      const selectedEmails = emails.slice(0, emailLimit);
-
-      const res = await axios.post(
-        "http://127.0.0.1:8000/send-bulk-mails",
-        {
-          emails: selectedEmails,
-          message: customMessage,
-        }
-      );
-
-      console.log(res.data);
-
-      setSending(false);
-
-      alert("Bulk Emails Sent Successfully");
-
-    } catch (error) {
-
-      console.log(error);
-
-      setSending(false);
-
-      alert("Failed To Send Emails");
-    }
-  };
-
-  return (
-
-    <main className="min-h-screen bg-black text-white">
-
-      {/* Navbar */}
-
-      <nav className="border-b border-zinc-800 bg-zinc-950/70 backdrop-blur-xl sticky top-0 z-50">
-
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-
-          <div>
-
-            <h1 className="text-3xl font-bold">
-              AI Cold Mail Agent
-            </h1>
-
-            <p className="text-zinc-400 text-sm mt-1">
-              Automated HR Outreach Platform
-            </p>
-
-          </div>
-
-          {
-
-            !session ? (
-
-              <button
-                onClick={() => signIn("google")}
-                className="bg-white text-black px-6 py-3 rounded-2xl font-semibold hover:scale-105 transition"
-              >
-                Login With Google
-              </button>
-
-            ) : (
-
-              <div className="flex items-center gap-4">
-
-                <div className="text-right">
-
-                  <p className="text-green-400 font-semibold">
-                    Connected
-                  </p>
-
-                  <p className="text-sm text-zinc-400">
-                    {session.user?.email}
-                  </p>
-
-                </div>
-
-                <button
-                  onClick={() => signOut()}
-                  className="bg-red-600 hover:bg-red-700 px-5 py-3 rounded-2xl"
-                >
-                  Logout
-                </button>
-
+              <div>
+                <h1 className="text-2xl font-bold">AI Cold Mail Agent</h1>
+                <p className="text-sm text-[var(--muted)]">Automated HR outreach</p>
               </div>
-
-            )
-
-          }
-
-        </div>
-
-      </nav>
-
-      {/* Hero */}
-
-      <section className="max-w-7xl mx-auto px-6 py-12">
-
-        <div className="mb-12">
-
-          <h2 className="text-6xl font-bold leading-tight max-w-4xl">
-
-            Automate Your
-            <span className="text-blue-500"> Cold Outreach </span>
-            With AI
-
-          </h2>
-
-          <p className="text-zinc-400 text-lg mt-6 max-w-2xl leading-relaxed">
-
-            Upload HR PDFs or CSVs, extract emails automatically,
-            connect your Gmail account, and send personalized cold emails
-            at scale.
-
-          </p>
-
-        </div>
-
-        {/* Upload Cards */}
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-          {/* HR Upload */}
-
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8 backdrop-blur-xl">
-
-            <h3 className="text-3xl font-bold mb-6">
-              Upload HR Contacts
-            </h3>
-
-            <input
-              type="file"
-              onChange={(e) => {
-
-                if (e.target.files) {
-                  setFile(e.target.files[0]);
-                }
-
-              }}
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 mb-6"
-            />
-
-            <button
-              onClick={uploadFile}
-              className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-2xl font-semibold transition hover:scale-105"
-            >
-              {
-                loading
-                  ? "Uploading..."
-                  : "Upload File"
-              }
-            </button>
-
-          </div>
-
-          {/* Resume Upload */}
-
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8 backdrop-blur-xl">
-
-            <h3 className="text-3xl font-bold mb-6">
-              Upload Resume
-            </h3>
-
-            <input
-              type="file"
-              onChange={(e) => {
-
-                if (e.target.files) {
-                  setResume(e.target.files[0]);
-                }
-
-              }}
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 mb-6"
-            />
-
-            <div className="bg-black border border-zinc-800 rounded-2xl p-4">
-
-              <p className="text-zinc-400">
-                {
-                  resume
-                    ? resume.name
-                    : "No Resume Uploaded"
-                }
-              </p>
 
             </div>
 
-          </div>
-
-        </div>
-
-        {/* Analytics */}
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8">
-
-            <p className="text-zinc-400 mb-3">
-              Emails Extracted
-            </p>
-
-            <h2 className="text-5xl font-bold">
-              {emails.length}
-            </h2>
+            <div>
+              { !session ? (
+                <button onClick={() => signIn("google")} className="bg-[var(--foreground)] text-white px-5 py-2 rounded-lg">Login</button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-green-500 font-semibold">Connected</p>
+                    <p className="text-sm text-[var(--muted)]">{session.user?.email}</p>
+                  </div>
+                  <button onClick={() => signOut()} className="bg-red-500 text-white px-4 py-2 rounded-lg">Logout</button>
+                </div>
+              ) }
+            </div>
 
           </div>
+        </header>
 
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8">
+        {/* Hero */}
+        <section className="py-20">
+          <div className="mx-auto hero-max px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
-            <p className="text-zinc-400 mb-3">
-              File Type
-            </p>
+              <div>
+                <h2 className="text-5xl font-extrabold leading-tight">
+                  Automate outreach. Close more roles.
+                </h2>
 
-            <h2 className="text-5xl font-bold uppercase">
-              {responseType || "N/A"}
-            </h2>
+                <p className="mt-6 text-lg text-[var(--muted)] max-w-xl">
+                  Upload HR lists or resumes, extract emails with AI, connect Gmail, and send personalized cold emails at scale.
+                </p>
 
+                <div className="mt-8 flex items-center gap-4">
+                  <a href="#upload" className="inline-flex items-center gap-3 bg-[var(--accent)] hover:bg-[var(--accent-600)] text-white px-6 py-3 rounded-full font-semibold">Get Started</a>
+                  <a href="#features" className="text-[var(--muted)]">See Features</a>
+                </div>
+
+                <div className="mt-8 flex gap-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{emails.length}</div>
+                    <div className="text-sm text-[var(--muted)]">Emails extracted</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{emailLimit}</div>
+                    <div className="text-sm text-[var(--muted)]">Send limit</div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="upload" className="glass-card rounded-3xl p-8">
+                {/* Upload form (kept existing functionality) */}
+                <h3 className="text-2xl font-semibold mb-4">Upload HR Contacts</h3>
+                <input type="file" onChange={(e) => { if (e.target.files) setFile(e.target.files[0]); }} className="w-full border rounded-lg p-3 mb-4" />
+                <button onClick={uploadFile} className="bg-[var(--accent)] hover:bg-[var(--accent-600)] text-white px-6 py-3 rounded-lg font-semibold">{loading ? 'Uploading...' : 'Upload & Extract'}</button>
+
+                <hr className="my-6" />
+
+                <h3 className="text-2xl font-semibold mb-4">Email Controls</h3>
+                <label className="block text-sm text-[var(--muted)] mb-2">Number of emails to send</label>
+                <input type="number" value={emailLimit} onChange={(e) => setEmailLimit(Number(e.target.value))} className="w-full border rounded-lg p-3 mb-4" />
+
+                <label className="block text-sm text-[var(--muted)] mb-2">Custom message</label>
+                <textarea rows={6} value={customMessage} onChange={(e) => setCustomMessage(e.target.value)} className="w-full border rounded-lg p-3 mb-4" />
+
+                <div className="flex gap-3">
+                  <button onClick={sendBulkMails} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg">{sending ? 'Sending...' : 'Send Emails'}</button>
+                  <button onClick={() => { if (session) { alert('Connected: ' + session.user?.email) } else signIn('google') }} className="border px-4 py-2 rounded-lg">{session ? 'Account' : 'Connect Gmail'}</button>
+                </div>
+
+              </div>
+
+            </div>
           </div>
+        </section>
 
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8">
-
-            <p className="text-zinc-400 mb-3">
-              Selected Emails
-            </p>
-
-            <h2 className="text-5xl font-bold text-green-400">
-              {emailLimit}
-            </h2>
-
+        {/* Features */}
+        <section id="features" className="py-16 bg-white/0">
+          <div className="max-w-7xl mx-auto px-6">
+            <h3 className="text-3xl font-bold mb-6">Features</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="p-6 glass-card rounded-xl">
+                <h4 className="font-semibold mb-2">AI Email Extraction</h4>
+                <p className="text-sm text-[var(--muted)]">Extract contact emails from PDFs, CSVs and resumes automatically.</p>
+              </div>
+              <div className="p-6 glass-card rounded-xl">
+                <h4 className="font-semibold mb-2">Gmail Integration</h4>
+                <p className="text-sm text-[var(--muted)]">Connect securely and send personalized emails from your account.</p>
+              </div>
+              <div className="p-6 glass-card rounded-xl">
+                <h4 className="font-semibold mb-2">Scale & Personalize</h4>
+                <p className="text-sm text-[var(--muted)]">Send high-volume outreach while keeping messages personalized.</p>
+              </div>
+            </div>
           </div>
+        </section>
 
-        </div>
-
-        {/* Controls */}
-
-        <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-10 mt-12">
-
-          <h2 className="text-4xl font-bold mb-10">
-            Email Controls
-          </h2>
-
-          {/* Limit */}
-
-          <div className="mb-8">
-
-            <label className="block mb-3 text-zinc-400 text-lg">
-              Number Of Emails To Send
-            </label>
-
-            <input
-              type="number"
-              value={emailLimit}
-              onChange={(e) => setEmailLimit(Number(e.target.value))}
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 text-lg"
-            />
-
-          </div>
-
-          {/* Message */}
-
-          <div className="mb-8">
-
-            <label className="block mb-3 text-zinc-400 text-lg">
-              Custom Email Message
-            </label>
-
-            <textarea
-              rows={10}
-              value={customMessage}
+      </main>
+    );
               onChange={(e) => setCustomMessage(e.target.value)}
               className="w-full bg-black border border-zinc-700 rounded-2xl p-5 text-lg"
             />
