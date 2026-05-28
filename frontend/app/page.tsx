@@ -58,6 +58,13 @@ export default function Home() {
   const [uploadsLog, setUploadsLog] = useState<UploadLog[]>([]);
   const [sendLogs, setSendLogs] = useState<SendLog[]>([]);
   const [sendResult, setSendResult] = useState<SendResult | null>(null);
+  const [contactSuccess, setContactSuccess] = useState(false);
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactSuccess(true);
+    setTimeout(() => setContactSuccess(false), 4000);
+  };
 
   const uploadFile = async () => {
     if (!file) {
