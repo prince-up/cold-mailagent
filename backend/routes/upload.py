@@ -6,6 +6,15 @@ import re
 
 router = APIRouter()
 
+EMAIL_PATTERN = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
+
+
+def _extract_emails_from_csv_rows(rows):
+    values = []
+    for row in rows:
+        values.extend(str(value) for value in row.values())
+    return sorted(set(email for value in values for email in EMAIL_PATTERN.findall(value)))
+
 @router.post("/upload-csv")
 async def upload_csv(file: UploadFile = File(...)):
 
@@ -22,11 +31,15 @@ async def upload_csv(file: UploadFile = File(...)):
 
         data = list(reader)
 
+        emails = _extract_emails_from_csv_rows(data)
+
         return {
             "type": "csv",
             "message": "CSV Uploaded Successfully",
             "total_records": len(data),
             "data": data
+            ,"emails_found": emails,
+            "total_emails": len(emails),
         }
 
     # PDF SUPPORT
@@ -41,7 +54,7 @@ async def upload_csv(file: UploadFile = File(...)):
         for page in pdf:
             text += page.get_text()
 
-        emails = re.findall(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", text)
+        emails = EMAIL_PATTERN.findall(text)
 
         return {
             "type": "pdf",

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AI Cold Mail Agent",
-  description: "Cold Mail Automation Platform",
+  description: "A polished Gmail outreach workspace for extracting contacts and sending personalized cold emails.",
 };
 
 export default function RootLayout({

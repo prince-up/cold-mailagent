@@ -62,7 +62,7 @@ Built with:
 * FastAPI
 * Python
 * Pandas
-* Resend API (initial version)
+* Gmail API
 
 ## Authentication
 
@@ -156,6 +156,8 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+Backend email sending uses the signed-in user's Google access token and the Gmail REST API, so no backend secret is needed.
 
 Run backend:
 
